@@ -7,13 +7,13 @@ import classes from "./ProductItem.module.css";
 const ProductItem = (props) => {
   const dispatch = useDispatch();
 
-  const { title, price, description, id } = props;
+  const { name, price, description, id } = props;
 
   const addToCartHandler = () => {
     dispatch(
       cartActions.addItemToCart({
         id,
-        title,
+        name,
         price,
       })
     );
@@ -23,7 +23,7 @@ const ProductItem = (props) => {
     <li className={classes.item}>
       <Card>
         <header>
-          <h3>{title}</h3>
+          <h3>{name}</h3>
           <div className={classes.price}>${price.toFixed(2)}</div>
         </header>
         <p>{description}</p>

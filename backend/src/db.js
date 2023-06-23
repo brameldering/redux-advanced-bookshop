@@ -7,7 +7,7 @@ async function connectToDb(cb) {
   const dbURI = `mongodb://127.0.0.1:27017`;
   const client = new MongoClient(dbURI);
   await client.connect();
-  db = client.db("bram-bookstore");
+  db = client.db("storeDB");
   //   console.log("db in connectToDb");
   //   console.log(db);
   cb();

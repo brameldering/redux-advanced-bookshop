@@ -5,24 +5,24 @@ import ProductItem from "./ProductItem";
 import classes from "./Products.module.css";
 
 const Products = (props) => {
-  const [booksCatalog, setBooksCatalog] = useState([]);
+  const [productCatalog, setProductCatalog] = useState([]);
 
-  const { isLoading, errorFetching, sendRequest: fetchBooks } = useHttp();
+  const { isLoading, errorFetching, sendRequest: fetchProducts } = useHttp();
   useEffect(() => {
     console.log("Products - useEffect called");
-    const transformBooks = (BookObj) => {
-      console.log(BookObj);
-      const loadedBooks = [];
-      for (const book in BookObj) {
-        loadedBooks.push({ ...BookObj[book], date: new Date(BookObj[book].date) });
+    const transformProducts = (ProductObj) => {
+      console.log(ProductObj);
+      const loadedProducts = [];
+      for (const product in ProductObj) {
+        loadedProducts.push({ ...ProductObj[product], date: new Date(ProductObj[product].date) });
       }
-      setBooksCatalog(loadedBooks);
+      setProductCatalog(loadedProducts);
     };
     const requestConfig = {
-      url: "http://localhost:8000/api/books",
+      url: "http://localhost:8000/api/products",
     };
-    fetchBooks(requestConfig, transformBooks);
-  }, [fetchBooks]);
+    fetchProducts(requestConfig, transformProducts);
+  }, [fetchProducts]);
 
   return (
     <section className={classes.products}>
@@ -44,11 +44,11 @@ const Products = (props) => {
       )}
       {!isLoading && (
         <ul>
-          {booksCatalog.map((product) => (
+          {productCatalog.map((product) => (
             <ProductItem
               key={product.id}
               id={product.id}
-              title={product.title}
+              name={product.name}
               price={product.price}
               description={product.description}
             />

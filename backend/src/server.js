@@ -6,44 +6,44 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// api to get all books
-app.get("/api/books", async (req, res) => {
-  console.log("app.get(/api/books)");
+// api to get all products
+app.get("/api/products", async (req, res) => {
+  console.log("app.get(/api/products)");
   // console.log(db);
-  const books = await db.collection("books").find({}).toArray();
-  res.json(books);
+  const products = await db.collection("products").find({}).toArray();
+  res.json(products);
 });
 
-// api to get a single book based on id
-app.get("/api/books/:id", async (req, res) => {
+// api to get a single product based on id
+app.get("/api/products/:id", async (req, res) => {
   console.group();
-  console.log("app.get(/api/books/:id)");
+  console.log("app.get(/api/products/:id)");
   const id = req.params.id;
   console.log("id: " + id);
-  const book = await db.collection("books").findOne({ id: id });
-  res.json(book);
+  const product = await db.collection("products").findOne({ id: Number(id) });
+  res.json(product);
   console.groupEnd();
 });
 
-// api to add a new book
-app.post("/api/books", async (req, res) => {
+// api to add a new product
+app.post("/api/products", async (req, res) => {
   console.group();
-  console.log("app.post(/api/books)");
+  console.log("app.post(/api/products)");
   let result = {
     acknowledged: false,
   };
-  const book = req.body;
+  const product = req.body;
   // TO DO: test the following
-  if (!book) {
-    res.status(400).json({ error: "Invalid book" });
+  if (!product) {
+    res.status(400).json({ error: "Invalid product" });
     return;
   }
   try {
-    result = await db.collection("books").insertOne(book);
+    result = await db.collection("products").insertOne(product);
     console.log("in try");
     console.log(result);
   } catch (error) {
-    console.log("Error in app.post(/api/books)");
+    console.log("Error in app.post(/api/products)");
     console.error(error);
   } finally {
     console.log("in finally");
