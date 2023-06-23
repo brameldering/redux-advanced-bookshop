@@ -8,10 +8,16 @@ import Products from "./components/Shop/Products";
 
 function App() {
   const showCart = useSelector((state) => state.ui.cartIsVisible);
-  const cartUser = useSelector((state) => state.cart.user);
-  const cartItems = useSelector((state) => state.cart.items);
+  const cart = useSelector((state) => state.cart);
+  const cartUser = cart.user;
+  const cartItems = cart.items;
 
-  const { isUpdating, errorUpdating, sendRequest: updateCart } = useHttp();
+  // const cartUser = useSelector((state) => state.cart.user);
+  // const cartItems = useSelector((state) => state.cart.items);
+
+  const { isLoading, error, sendRequest: updateCart } = useHttp();
+  console.log("--- App 1 ---");
+  console.log("isUpdating: " + isLoading);
 
   useEffect(() => {
     console.group();
@@ -37,6 +43,8 @@ function App() {
       };
 
       updateCart(requestConfig, applyUpdateResponse);
+      console.log("--- App 2 ---");
+      console.log("isUpdating: " + isLoading);
     } catch (error) {
       console.log("ERROR updating cart " + error);
 
@@ -45,7 +53,7 @@ function App() {
   }, [updateCart, cartItems, cartUser]);
 
   return (
-    <Layout>
+    <Layout isUpdating={isLoading}>
       {showCart && <Cart />}
       <Products />
     </Layout>

@@ -1,12 +1,16 @@
-import { Fragment } from 'react';
-import MainHeader from './MainHeader';
+import MainHeader from "./MainHeader";
+import classes from "./Layout.module.css";
 
 const Layout = (props) => {
+  const isUpdating = props.isUpdating;
+  console.log("--- Layout ---");
+  console.log("isUpdating: " + isUpdating);
+
   return (
-    <Fragment>
+    <div className={`${classes.cursorsetting} ${isUpdating && classes.wait}`}>
       <MainHeader />
       <main>{props.children}</main>
-    </Fragment>
+    </div>
   );
 };
 
