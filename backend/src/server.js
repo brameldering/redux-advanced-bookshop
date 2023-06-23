@@ -6,6 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// ===================== products =====================
 // api to get all products
 app.get("/api/products", async (req, res) => {
   console.log("app.get(/api/products)");
@@ -40,19 +41,66 @@ app.post("/api/products", async (req, res) => {
   }
   try {
     result = await db.collection("products").insertOne(product);
-    console.log("in try");
+    console.log("in try of app.post(/api/products)");
     console.log(result);
   } catch (error) {
     console.log("Error in app.post(/api/products)");
     console.error(error);
   } finally {
-    console.log("in finally");
+    console.log("in finally of app.post(/api/products)");
     console.log(result);
     res.json(result);
     console.groupEnd();
   }
 });
 
+// ===================== cart =====================
+// api to update current cart
+app.put("/api/carts", async (req, res) => {
+  console.group();
+  console.log("app.put(/api/carts) " + new Date());
+  let result = {
+    acknowledged: false,
+  };
+  // console.log(req);
+  const cart = req.body;
+  const user = cart.user;
+  const items = cart.items;
+  console.log(items);
+  if (!cart) {
+    res.status(400).json({ error: "Invalid cart" });
+    return;
+  }
+  try {
+    const now = new Date();
+    result = await db.collection("carts").updateOne(
+      { user: user },
+      {
+        $set: {
+          items: items,
+          lastUpdated: now,
+          lastUpdatedDateOffset: now.getTimezoneOffset(),
+        },
+      },
+      {
+        upsert: true,
+        multi: true,
+      }
+    );
+    console.log("in try of app.put(/api/carts");
+    console.log(result);
+  } catch (error) {
+    console.log("Error in app.put(/api/carts");
+    console.error(error);
+  } finally {
+    console.log("in finally of app.put(/api/carts");
+    console.log(result);
+    res.json(result);
+    console.groupEnd();
+  }
+});
+
+// ================== connect to DB ===================
 // allow for environment variable PORT with a default of 8000 (for dev)
 const PORT = process.env.PORT || 8000;
 

@@ -11,6 +11,7 @@ const Products = (props) => {
   useEffect(() => {
     console.log("Products - useEffect called");
     const transformProducts = (ProductObj) => {
+      console.log("ProductObj");
       console.log(ProductObj);
       const loadedProducts = [];
       for (const product in ProductObj) {
