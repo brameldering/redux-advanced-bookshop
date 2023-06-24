@@ -8,23 +8,19 @@ import Products from "./components/Shop/Products";
 
 function App() {
   const showCart = useSelector((state) => state.ui.cartIsVisible);
-  const cart = useSelector((state) => state.cart);
-  const cartUser = cart.user;
-  const cartItems = cart.items;
-
-  // const cartUser = useSelector((state) => state.cart.user);
-  // const cartItems = useSelector((state) => state.cart.items);
+  const cartUser = useSelector((state) => state.cart.user);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const { isLoading, error, sendRequest: updateCart } = useHttp();
-  console.log("--- App 1 ---");
+  console.warn("--> App - Start");
+  console.count("App-start");
   console.log("isUpdating: " + isLoading);
 
   useEffect(() => {
-    console.group();
-    console.log("Cart - useEffect called");
-    console.log("cartUser: " + cartUser);
-    console.log(cartItems);
-    console.groupEnd();
+    console.error("--> App - useEffect called");
+    console.count("useEffect");
+    let updateRe;
+    // console.log(cartItems);
     try {
       const requestConfig = {
         url: "http://localhost:8000/api/carts",
@@ -38,19 +34,19 @@ function App() {
         },
       };
       const applyUpdateResponse = (updateResponse) => {
-        console.log("updateResponse");
+        console.log("-> App - applyUpdateResponse");
         console.log(updateResponse);
       };
 
       updateCart(requestConfig, applyUpdateResponse);
-      console.log("--- App 2 ---");
+      console.log("--> App - after updateCart");
       console.log("isUpdating: " + isLoading);
     } catch (error) {
       console.log("ERROR updating cart " + error);
 
       //throw error;
     }
-  }, [updateCart, cartItems, cartUser]);
+  }, [updateCart, cartItems, cartUser, isLoading]);
 
   return (
     <Layout isUpdating={isLoading}>
