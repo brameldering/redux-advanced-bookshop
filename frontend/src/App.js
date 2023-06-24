@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import useHttp from "./hooks/use-http";
 import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
@@ -11,45 +10,47 @@ function App() {
   const cartUser = useSelector((state) => state.cart.user);
   const cartItems = useSelector((state) => state.cart.items);
 
-  const { isLoading, error, sendRequest: updateCart } = useHttp();
-  console.warn("--> App - Start");
+  const [isUpdating, setIsUpdating] = useState(false);
+
   console.count("App-start");
-  console.log("isUpdating: " + isLoading);
 
   useEffect(() => {
-    console.error("--> App - useEffect called");
+    console.warn("--> App - useEffect called");
     console.count("useEffect");
-    let updateRe;
-    // console.log(cartItems);
-    try {
-      const requestConfig = {
-        url: "http://localhost:8000/api/carts",
+    const writeCart = async () => {
+      setIsUpdating(true);
+      const response = await fetch("http://localhost:8000/api/carts", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: {
+        body: JSON.stringify({
           user: cartUser,
           items: cartItems,
-        },
-      };
-      const applyUpdateResponse = (updateResponse) => {
-        console.log("-> App - applyUpdateResponse");
-        console.log(updateResponse);
-      };
+        }),
+      });
+      if (!response.ok) {
+        console.log(response);
+        throw new Error("Request failed!");
+      }
+      const updateResponse = await response.json();
+      console.log("-> App - updateResponse");
+      console.log(updateResponse);
+      // await new Promise((r) => setTimeout(r, 500));
+      setIsUpdating(false);
+    };
 
-      updateCart(requestConfig, applyUpdateResponse);
-      console.log("--> App - after updateCart");
-      console.log("isUpdating: " + isLoading);
-    } catch (error) {
-      console.log("ERROR updating cart " + error);
-
-      //throw error;
+    if (cartUser && cartItems.length > 0) {
+      writeCart().catch((error) => {
+        console.error("Error in writeCart ");
+        console.log(error);
+      });
+      console.log("--> App - after writeCart");
     }
-  }, [updateCart, cartItems, cartUser, isLoading]);
+  }, [cartItems, cartUser]);
 
   return (
-    <Layout isUpdating={isLoading}>
+    <Layout isUpdating={isUpdating}>
       {showCart && <Cart />}
       <Products />
     </Layout>

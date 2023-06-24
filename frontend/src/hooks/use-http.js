@@ -19,7 +19,7 @@ const useHttp = () => {
       }
       const data = await response.json();
 
-      // await new Promise((r) => setTimeout(r, 3000));
+      // await new Promise((r) => setTimeout(r, 500));
 
       applyData(data);
     } catch (err) {
