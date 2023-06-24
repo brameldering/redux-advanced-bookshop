@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useHttp from "../../hooks/use-http";
+import useHttpGet from "../../hooks/use-http-GET";
 import LoadingIndicator from "../UI/LoadingIndicator/LoadingIndicator";
 import ProductItem from "./ProductItem";
 import classes from "./Products.module.css";
@@ -7,7 +7,7 @@ import classes from "./Products.module.css";
 const Products = (props) => {
   const [productCatalog, setProductCatalog] = useState([]);
 
-  const { isLoading, errorFetching, sendRequest: fetchProducts } = useHttp();
+  const { isLoading, errorFetching, sendRequest: fetchProducts } = useHttpGet();
   useEffect(() => {
     console.log("Products - useEffect called");
     const transformProducts = (ProductObj) => {

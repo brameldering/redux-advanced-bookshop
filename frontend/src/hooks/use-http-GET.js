@@ -1,6 +1,9 @@
+// ================================================
+// = Custom hook to be used for HTTP GET requests =
+// ================================================
 import { useState, useCallback } from "react";
 
-const useHttp = () => {
+const useHttpGet = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -9,11 +12,7 @@ const useHttp = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(requestConfig.url, {
-        method: requestConfig.method ? requestConfig.method : "GET",
-        headers: requestConfig.headers ? requestConfig.headers : {},
-        body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
-      });
+      const response = await fetch(requestConfig.url);
       if (!response.ok) {
         throw new Error("Request failed!");
       }
@@ -35,4 +34,4 @@ const useHttp = () => {
   };
 };
 
-export default useHttp;
+export default useHttpGet;
