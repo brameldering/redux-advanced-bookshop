@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import useHttpGet from "../../hooks/use-http-GET";
 import LoadingIndicator from "../UI/LoadingIndicator/LoadingIndicator";
 import ProductItem from "./ProductItem";
 import classes from "./Products.module.css";
 
 const Products = (props) => {
+  const cartUser = useSelector((state) => state.cart.user);
   const [productCatalog, setProductCatalog] = useState([]);
 
   const { isLoading, errorFetching, sendRequest: fetchProducts } = useHttpGet();
@@ -52,6 +54,7 @@ const Products = (props) => {
               name={product.name}
               price={product.price}
               description={product.description}
+              user={cartUser}
             />
           ))}
         </ul>

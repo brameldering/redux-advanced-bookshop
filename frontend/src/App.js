@@ -6,6 +6,7 @@ import Layout from "./components/Layout/Layout";
 import Notification from "./components/UI/Notification";
 import Products from "./components/Shop/Products";
 import { sendCartData } from "./store/cart-slice";
+import { cartActions } from "./store/cart-slice";
 
 let isInitial = true;
 
@@ -20,8 +21,16 @@ function App() {
 
   console.count("App-start");
 
+  // Login
   useEffect(() => {
-    console.count("--> App useEffect");
+    console.count("--> App useEffect On Mount");
+    const user = "Bram3";
+    dispatch(cartActions.setUser(user));
+  }, [dispatch]);
+
+  // Save Cart
+  useEffect(() => {
+    console.count("--> App useEffect - [cartUser, cartItems, dispatch]");
     if (isInitial) {
       isInitial = false;
       return;

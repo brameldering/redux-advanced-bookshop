@@ -9,13 +9,17 @@ const cartSlice = createSlice({
     totalQuantity: 0,
   },
   reducers: {
+    setUser(state, action) {
+      console.log("cart-slice -> setUser");
+      const user = action.payload;
+      state.user = user;
+    },
     addItemToCart(state, action) {
       console.log("cart-slice -> addItemToCart");
-      const user = action.payload.user;
+      // state.user = state.user;
       const newItem = action.payload.item;
       const existingItem = state.items.find((item) => item.id === newItem.id);
       state.totalQuantity++;
-      state.user = user;
       if (!existingItem) {
         state.items.push({
           id: newItem.id,
