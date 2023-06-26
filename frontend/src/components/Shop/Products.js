@@ -1,31 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import useHttpGet from "../../hooks/use-http-GET";
 import LoadingIndicator from "../UI/LoadingIndicator/LoadingIndicator";
 import ProductItem from "./ProductItem";
 import classes from "./Products.module.css";
 
 const Products = (props) => {
-  const cartUser = useSelector((state) => state.cart.user);
-  const [productCatalog, setProductCatalog] = useState([]);
+  const catalogItems = useSelector((state) => state.catalog.productCatalog);
+  const notification = useSelector((state) => state.ui.notification);
 
-  const { isLoading, errorFetching, sendRequest: fetchProducts } = useHttpGet();
-  useEffect(() => {
-    console.log("Products - useEffect called");
-    const transformProducts = (ProductObj) => {
-      console.log("ProductObj");
-      console.log(ProductObj);
-      const loadedProducts = [];
-      for (const product in ProductObj) {
-        loadedProducts.push({ ...ProductObj[product], date: new Date(ProductObj[product].date) });
-      }
-      setProductCatalog(loadedProducts);
-    };
-    const requestConfig = {
-      url: "http://localhost:8000/api/products",
-    };
-    fetchProducts(requestConfig, transformProducts);
-  }, [fetchProducts]);
+  let isLoading = notification && notification.status === "pending";
 
   return (
     <section className={classes.products}>
@@ -47,14 +30,13 @@ const Products = (props) => {
       )}
       {!isLoading && (
         <ul>
-          {productCatalog.map((product) => (
+          {catalogItems.map((product) => (
             <ProductItem
               key={product.id}
               id={product.id}
               name={product.name}
               price={product.price}
               description={product.description}
-              user={cartUser}
             />
           ))}
         </ul>

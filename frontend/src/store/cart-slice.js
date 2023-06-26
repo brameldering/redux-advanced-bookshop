@@ -15,7 +15,7 @@ const cartSlice = createSlice({
       state.user = user;
     },
     replaceCart(state, action) {
-      console.log("action data");
+      console.log("cartSlice.replaceCart -> action data");
       console.log(action);
       state.user = action.payload.user;
       state.items = action.payload.items;
@@ -23,7 +23,6 @@ const cartSlice = createSlice({
     },
     addItemToCart(state, action) {
       console.log("cart-slice -> addItemToCart");
-      // state.user = state.user;
       const newItem = action.payload.item;
       const existingItem = state.items.find((item) => item.id === newItem.id);
       state.totalQuantity++;

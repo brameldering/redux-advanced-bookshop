@@ -5,6 +5,7 @@ import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Notification from "./components/UI/Notification";
 import Products from "./components/Shop/Products";
+import { loadCatalogData } from "./store/catalog-actions";
 import { loadCartData, saveCartData } from "./store/cart-actions";
 import { cartActions } from "./store/cart-slice";
 
@@ -30,9 +31,16 @@ function App() {
     dispatch(cartActions.setUser(user));
   }, [dispatch]);
 
+  // ===================== load catalog =====================
+  useEffect(() => {
+    console.count("---> App - UseEffect");
+    dispatch(loadCatalogData());
+    console.log("--> Cart - after dispatch loadCatalogData");
+  }, [dispatch]);
+
   // ===================== load cart =====================
   useEffect(() => {
-    console.count("---> Cart - UseEffect");
+    console.count("---> App - UseEffect - loadCartData");
     if (cartUser) {
       dispatch(loadCartData(cartUser));
       console.log("--> Cart - after dispatch loadCartData");
@@ -55,7 +63,7 @@ function App() {
 
   return (
     <Fragment>
-      {notification && (
+      {notification && notification.showHeader && (
         <Notification
           status={notification.status}
           title={notification.title}

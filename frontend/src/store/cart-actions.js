@@ -3,6 +3,12 @@ import { cartActions } from "./cart-slice";
 
 export const loadCartData = (cartUser) => {
   return async (dispatch) => {
+    dispatch(
+      uiActions.showNotification({
+        status: "pending",
+        showHeader: false,
+      })
+    );
     const fetchData = async () => {
       const response = await fetch(`http://localhost:8000/api/carts/${cartUser}`);
       if (!response.ok) {
@@ -29,6 +35,7 @@ export const loadCartData = (cartUser) => {
           status: "error",
           title: "Error!",
           message: "Error in loadCartData: " + error.message,
+          showHeader: true,
         })
       );
     }
@@ -40,8 +47,7 @@ export const saveCartData = (cartUser, cartItems, cartTotalQuantity) => {
     dispatch(
       uiActions.showNotification({
         status: "pending",
-        title: "Saving...",
-        message: "Saving cart data",
+        showHeader: false,
       })
     );
     const sendRequest = async () => {
@@ -62,12 +68,11 @@ export const saveCartData = (cartUser, cartItems, cartTotalQuantity) => {
     };
     try {
       await sendRequest();
-      // await new Promise((r) => setTimeout(r, 1000));
+
       dispatch(
         uiActions.showNotification({
           status: "success",
-          title: "Success",
-          message: "Saved cart data succesfully",
+          showHeader: false,
         })
       );
     } catch (error) {
@@ -77,6 +82,7 @@ export const saveCartData = (cartUser, cartItems, cartTotalQuantity) => {
           status: "error",
           title: "Error!",
           message: "Error in saveCartData: " + error.message,
+          showHeader: true,
         })
       );
     }
