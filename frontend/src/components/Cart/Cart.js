@@ -1,23 +1,12 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Card from "../UI/Card/Card";
 import classes from "./Cart.module.css";
 import CartItem from "./CartItem";
-import { cartActions } from "../../store/cart-slice";
 
 const Cart = (props) => {
-  const dispatch = useDispatch();
   const cartUser = useSelector((state) => state.cart.user);
   const cartItems = useSelector((state) => state.cart.items);
-
-  useEffect(() => {
-    console.count("---> Cart - UseEffect");
-    if (cartUser) {
-      // dispatch(cartActions.loadCartData(cartUser));
-      console.log("--> Cart - after dispatch loadCartData");
-    }
-  }, [cartUser, dispatch]);
 
   return (
     <Card className={classes.cart}>

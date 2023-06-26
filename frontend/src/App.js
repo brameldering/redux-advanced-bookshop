@@ -5,7 +5,7 @@ import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Notification from "./components/UI/Notification";
 import Products from "./components/Shop/Products";
-import { sendCartData } from "./store/cart-slice";
+import { loadCartData, saveCartData } from "./store/cart-actions";
 import { cartActions } from "./store/cart-slice";
 
 let isInitial = true;
@@ -16,30 +16,42 @@ function App() {
   const notification = useSelector((state) => state.ui.notification);
   const cartUser = useSelector((state) => state.cart.user);
   const cartItems = useSelector((state) => state.cart.items);
+  const cartTotalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const cartChanged = useSelector((state) => state.cart.changed);
 
   let isUpdating = notification && notification.status === "pending";
 
   console.count("App-start");
 
-  // Login
+  // ===================== Login =====================
   useEffect(() => {
     console.count("--> App useEffect On Mount");
     const user = "Bram3";
     dispatch(cartActions.setUser(user));
   }, [dispatch]);
 
-  // Save Cart
+  // ===================== load cart =====================
   useEffect(() => {
-    console.count("--> App useEffect - [cartUser, cartItems, dispatch]");
+    console.count("---> Cart - UseEffect");
+    if (cartUser) {
+      dispatch(loadCartData(cartUser));
+      console.log("--> Cart - after dispatch loadCartData");
+    }
+  }, [cartUser, dispatch]);
+
+  // ===================== Save Cart =====================
+  useEffect(() => {
     if (isInitial) {
       isInitial = false;
       return;
     }
-    if (cartUser && cartItems.length > 0) {
-      dispatch(sendCartData(cartUser, cartItems));
+    // cartChanged is there to avoid the cart being saved upon replaceCart (used at initial load of card)
+    // when an item is added or removed from the cart then cartChanged is set to true in cart-slice
+    if (cartChanged) {
+      dispatch(saveCartData(cartUser, cartItems, cartTotalQuantity));
       console.log("--> App - after dispatch sendCartData");
     }
-  }, [cartUser, cartItems, dispatch]);
+  }, [cartChanged, cartUser, cartItems, cartTotalQuantity, dispatch]);
 
   return (
     <Fragment>

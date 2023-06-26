@@ -8,7 +8,7 @@ const useHttpGet = () => {
   const [error, setError] = useState(null);
 
   const sendRequest = useCallback(async (requestConfig, applyData) => {
-    console.log("in sendRequest");
+    console.group("in sendRequest");
     setIsLoading(true);
     setError(null);
     try {
@@ -17,7 +17,8 @@ const useHttpGet = () => {
         throw new Error("Request failed!");
       }
       const data = await response.json();
-
+      console.log("data:");
+      console.log(data);
       // await new Promise((r) => setTimeout(r, 500));
 
       applyData(data);
@@ -25,6 +26,7 @@ const useHttpGet = () => {
       setError(err.message || "Something went wrong!");
     }
     setIsLoading(false);
+    console.groupEnd();
   }, []);
 
   return {
